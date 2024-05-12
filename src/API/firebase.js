@@ -4,14 +4,15 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCBomrUGSVE2YwbyP29T0nEZkHz2SG95MI",
-    authDomain: "notes-e3598.firebaseapp.com",
-    projectId: "notes-e3598",
-    storageBucket: "notes-e3598.appspot.com",
-    messagingSenderId: "3059685279",
-    appId: "1:3059685279:web:d60af7981a7b625a378faa"
-  };
-  
+  apiKey: "AIzaSyAzdRD0MOvBUOfJIOfGjTyRer6esVg5wt4",
+  authDomain: "chatapp-ef020.firebaseapp.com",
+  projectId: "chatapp-ef020",
+  storageBucket: "chatapp-ef020.appspot.com",
+  messagingSenderId: "821875886336",
+  appId: "1:821875886336:web:97bd426700440b79018be5"
+};
+
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();

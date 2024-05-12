@@ -7,7 +7,7 @@ module.exports = {
     extend: {
       colors: {
         // Add your custom color here
-        main: '#08544E', // Example color code
+        main: '#083D39', // Example color code
       },
     },
   },

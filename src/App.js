@@ -30,7 +30,6 @@ function App() {
     return <h2>Loading...</h2>;
   }
    
-    return <Chat/>;
 
   return (
     <BrowserRouter>
@@ -40,7 +39,7 @@ function App() {
           path="/chat"
           element={
             <ProtectedRoute user={user}>
-              <Chat></Chat>
+              <Chat user = {user}/>
             </ProtectedRoute>
           }
         ></Route>

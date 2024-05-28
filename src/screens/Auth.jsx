@@ -1,23 +1,41 @@
-import React, { useState } from 'react'
-import { signInWithEmailPassword } from '../API/sign';
+import React, { useEffect, useState } from 'react'
+import { signInWithEmailPassword } from '../API/users/sign';
 import { Navigate } from 'react-router-dom';
-import onLogin from '../API/login';
+import onLogin from '../API/users/login';
+import CreateUser from '../API/users/createUser';
+import { useStateContext } from '../context/context';
+import getUser from '../API/users/getUser';
 
 
 function Login({handleClick}){
+
+  const {setcureentUser , cureentUser} = useStateContext()
+
   const clssInput = ' md:w-72 text-white outline-none  text-sm p-1 px-3 placeholder:text-xs bg-transparent border-b-2 border-b-white';
   const [inputs, setinputs] = useState({
     email : null,
     password : null
   });
 
-  const _onlogin= ()=>{
+  const _onlogin= async ()=>{
     
     const {email , password} = inputs;
     
-     onLogin(email , password);
+    const user = await onLogin(email , password);
+    
 
-   
+      const userdata =  getUser(user.uid);
+     
+      if(userdata)
+      userdata.then((value)=>{
+          setcureentUser({
+             ...value.data() , id : value.id
+          })
+      }
+    
+    ).catch((e)=> console.log("eror getting data user " + e));
+      
+    
   }
 
   const handleInputChange = (event) => {
@@ -50,6 +68,8 @@ function Login({handleClick}){
 
 function SignUp({handleClick}){
   
+   const {setcureentUser , cureentUser} =  useStateContext();
+
   const [inputs, setinputs] = useState({
     name : null,
     email : null,
@@ -65,18 +85,35 @@ function SignUp({handleClick}){
       setinputs({ ...inputs, [name]: value });
     };
     
-    const {email , password} = inputs;
    
 
-    const _onsubmit = ()=>{
+    const _onsubmit = async()=>{
+
+    const {email , password , name , username } = inputs;
+
             signInWithEmailPassword(email , password)
             .then((userCredential) => {
             // Signed in successfully
              const user = userCredential.user;
+
             console.log("User signed in:", user);
+            
+            const {uid} = user
+            
+           
+
+          CreateUser({uid , email , name , username}).then((value)=> {
+           const {id} = value;
+
+            setcureentUser({
+              email : email , name : name , uid : uid, username ,id : id
             })
+              
+            console.log(cureentUser)
+          });
+
+         })
             .catch((error) => {
-            // Handle errors
             console.error("Sign in error:", error.message);
             });
     }

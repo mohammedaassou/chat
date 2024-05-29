@@ -17,7 +17,7 @@ export const ContextProvider = ({ children }) => {
     const [openSearchModel, setopenSearchModel] = useState(false);
     const [cureentUser, setcureentUser] = useState(() => getFromLocalStorage("cureentUser", {}));
     const [selectedUserChat, setselectedUserChat] = useState({})
-    const [CurrentMessages, setCurrentMessages] = useState([{text : "test"}]);
+    const [CurrentMessages, setCurrentMessages] = useState([]);
     const [amisinfo, setamisinfo] = useState([])
 
     const [isChatScreen, setisChatScreen] = useState(false);

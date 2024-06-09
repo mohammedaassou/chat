@@ -1,15 +1,20 @@
 
 
-import { onSnapshot, collection, query, orderBy, where } from "firebase/firestore";
+import { onSnapshot, collection, query, orderBy, where, startAt, endAt } from "firebase/firestore";
 import { db } from "../firebase";
 
 const messageRef = collection(db, "users");
 
-const getUsers = async (setusers , cureentUser) => {
+const getFriends = async (setusers , amisIds) => {
+ const uids = Array.from(amisIds);
+  
+ console.log("amis : ")
+ console.log(uids);
+
   try {
     const q = query(
       messageRef,
-      where("email" , "!=",  cureentUser.email),
+      where("uid" , "in",  uids),
       orderBy("name" , "asc"),
     );
     // Order by timestamp in ascending order
@@ -19,11 +24,13 @@ const getUsers = async (setusers , cureentUser) => {
         id: doc.id,
       }));
 
+      console.log("liste")
+
       console.log(liste) 
       setusers(liste);
     });
 
-    // console.log("Subscribed to Firestore changes.");
+    console.log("Subscribed to Firestore changes.");
 
     // Return unsubscribe function if you want to stop listening to changes later
     return unsubscribe;
@@ -32,4 +39,4 @@ const getUsers = async (setusers , cureentUser) => {
   }
 };
 
-export default getUsers;
+export default getFriends;

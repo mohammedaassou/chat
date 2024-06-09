@@ -18,9 +18,10 @@ export const ContextProvider = ({ children }) => {
     const [cureentUser, setcureentUser] = useState(() => getFromLocalStorage("cureentUser", {}));
     const [selectedUserChat, setselectedUserChat] = useState({})
     const [CurrentMessages, setCurrentMessages] = useState([]);
-    const [amisinfo, setamisinfo] = useState([])
+    const [friends, setfriends] = useState([])
 
     const [isChatScreen, setisChatScreen] = useState(false);
+    
   
     useEffect(() => {
         setToLocalStorage("users", users);
@@ -28,7 +29,7 @@ export const ContextProvider = ({ children }) => {
 
 
     useEffect(() => {
-        setToLocalStorage("cureentUser" , cureentUser);
+        setToLocalStorage("cureentUser"  , cureentUser);
     }, [cureentUser]);
 
     return (
@@ -43,8 +44,8 @@ export const ContextProvider = ({ children }) => {
             setselectedUserChat : setselectedUserChat,
             setCurrentMessages : setCurrentMessages,
             CurrentMessages : CurrentMessages,
-            setamisinfo : setamisinfo,
-            amisinfo : amisinfo,
+            setfriends : setfriends,
+            friends : friends,
             isChatScreen : isChatScreen,
             setisChatScreen : setisChatScreen
         }}>

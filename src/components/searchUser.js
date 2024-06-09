@@ -6,27 +6,33 @@ import { useStateContext } from '../context/context';
 import { IoMdPersonAdd , IoMdArrowBack} from "react-icons/io";
 import { MdOutlineClear } from "react-icons/md";
 import addUser from '../API/users/addUser';
+import getUsers from '../API/users/getUsers';
+import { wait } from '@testing-library/user-event/dist/utils';
 
 function SearchUser({user}) {
   
-   const {users , cureentUser , setcureentUser} = useStateContext();
+   const {users , cureentUser , setcureentUser , friends , setfriends, setusers} = useStateContext();
 
    const [serchedliste, setserchedliste] = useState([])
 
-  const [searchName, setsearchName] = useState("")
   
+ const [searchName, setsearchName] = useState("")
+  
+
 
   const _onSeach = (e)=>{
     setsearchName(e.target.value);
 
     if(e.target.value === ""){
       setserchedliste([]);
-      return null;
+      return ;
     }
     
     const amis = Array.from(cureentUser.amis);
 
-    const liste = users.filter((e)=>  e.name!= null && e.name.toLowerCase().startsWith(searchName.toLowerCase()) && !amis.includes(e.id) )
+    console.log(amis);
+
+    const liste = users.filter((e)=>  e.name!= null && e.name.toLowerCase().startsWith(searchName.toLowerCase()) && !amis.includes(e.uid) )
      
     setserchedliste(liste);
      
@@ -34,18 +40,23 @@ function SearchUser({user}) {
   }
   
  const _onAddUser = (e)=>{
+  
 
 
   const amis = Array.from(cureentUser.amis);
   
   if(!amis) return;
 
-  if(cureentUser.id && e.id && !amis.includes(e.id)){
+  if(cureentUser.id && e.uid && !amis.includes(e.uid)){
     addUser(cureentUser.id , {
-      amis : [...amis , e.id]
+      amis : [...amis , e.uid]
     });
 
-    setcureentUser(prev=> ({ ...prev , amis : [...amis , e.id]}));
+    setcureentUser(prev=> ({ ...prev , amis : [...amis , e.uid]}));
+    
+    setfriends([...friends , e]);
+    
+    console.log(cureentUser.amis);
 
     
     const liste = serchedliste.filter((elem)=> elem.id != e.id)

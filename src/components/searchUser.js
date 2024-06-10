@@ -5,9 +5,9 @@ import React , {useEffect, useState} from 'react'
 import { useStateContext } from '../context/context';
 import { IoMdPersonAdd , IoMdArrowBack} from "react-icons/io";
 import { MdOutlineClear } from "react-icons/md";
-import addUser from '../API/users/addUser';
 import getUsers from '../API/users/getUsers';
 import { wait } from '@testing-library/user-event/dist/utils';
+import updateUser from '../API/users/updateUser';
 
 function SearchUser({user}) {
   
@@ -40,16 +40,18 @@ function SearchUser({user}) {
   }
   
  const _onAddUser = (e)=>{
-  
 
-
-  const amis = Array.from(cureentUser.amis);
+  const amis = Array.from(cureentUser.amis ?? []);
   
   if(!amis) return;
 
   if(cureentUser.id && e.uid && !amis.includes(e.uid)){
-    addUser(cureentUser.id , {
+    updateUser(cureentUser.id , {
       amis : [...amis , e.uid]
+    });
+  
+    updateUser(e.id , {
+      amis : [...e.amis , cureentUser.uid]
     });
 
     setcureentUser(prev=> ({ ...prev , amis : [...amis , e.uid]}));

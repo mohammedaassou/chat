@@ -19,7 +19,7 @@ const getUsers = async (setusers , cureentUser) => {
         id: doc.id,
       }));
 
-      console.log(liste) 
+      console.log(liste) ;
       setusers(liste);
     });
 

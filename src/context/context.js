@@ -21,6 +21,11 @@ export const ContextProvider = ({ children }) => {
     const [friends, setfriends] = useState([])
 
     const [isChatScreen, setisChatScreen] = useState(false);
+
+    const [activeModel, setactiveModel] = useState(false);
+    const [activeProfile, setactiveProfile] = useState(false);
+
+
     
   
     useEffect(() => {
@@ -47,7 +52,11 @@ export const ContextProvider = ({ children }) => {
             setfriends : setfriends,
             friends : friends,
             isChatScreen : isChatScreen,
-            setisChatScreen : setisChatScreen
+            setisChatScreen : setisChatScreen,
+            activeModel : activeModel,
+            setactiveModel : setactiveModel,
+            activeProfile : activeProfile ,
+            setactiveProfile : setactiveProfile
         }}>
             {children}
         </StateContext.Provider>

@@ -105,8 +105,10 @@ function SignUp({handleClick}){
           CreateUser({uid , email , name , username}).then((value)=> {
            const {id} = value;
 
+           console.log("id ::: " + id);
+
             setcureentUser({
-              email : email , name : name , uid : uid, username ,id : id
+              email : email , name : name , uid : uid, username : username , id : id , amis : {}
             })
               
             console.log(cureentUser)

@@ -1,25 +1,44 @@
 
 
-import React, { useEffect} from 'react'
+import React, { useEffect, useState} from 'react'
 
 import { AiFillPlusCircle } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
 import { useStateContext } from '../../context/context';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../API/firebase';
+
 import getFriends from '../../API/users/get_friends';
+import getUsers from '../../API/users/getUsers';
+import Loading from '../../components/loading';
+
 
 let navheight = 14;
 
 export default function UsersScreen(){
 
- const {setopenSearchModel , users , cureentUser, setselectedUserChat , isChatScreen, setisChatScreen , friends , setfriends} = useStateContext();
+ const {setopenSearchModel , setactiveModel, setusers, cureentUser, setselectedUserChat , isChatScreen, setisChatScreen , friends , setfriends} = useStateContext();
 
   console.log(cureentUser);
+  
+  const [isLoading, setisLoading] = useState(false)
+   
+  useEffect(() => {
+      
+   const subscribe = async()=>{
+     setisLoading(p=>!p);
+     await getUsers(setusers  , cureentUser);
+ 
+     setTimeout(() => {
+      setisLoading(p=>!p);
+     }, 1000);
+   } 
+   subscribe();
+ 
+ }, [setusers])
 
 
   useEffect(() => {
      
+
     getFriends(setfriends , cureentUser.amis);
 
    
@@ -32,11 +51,7 @@ export default function UsersScreen(){
    }
    
    const _onSetting = ()=>{
-    signOut(auth);
-
-    setfriends([]);
-
-    setselectedUserChat({})
+    setactiveModel(prev =>!prev)
 
    }
   const style = isChatScreen ? "hidden " : "";
@@ -52,9 +67,10 @@ export default function UsersScreen(){
    
    {/* users */}
    <div className={`pt-16 h-[100vh] overflow-scroll`}>
-    
-
+      
+   
     {
+      isLoading ? <Loading/> :
       friends.map((e)=> <div key={e.id} className=' flex bg-white px-2 py-2 border-b-[1px] border-main cursor-pointer' onClick={()=> _onSelectUser(e) }>
       <div className='rounded-full h-10 w-10 bg-black'></div>
       <h1 className='text-black ml-2 text-sm'>{e.name}</h1>

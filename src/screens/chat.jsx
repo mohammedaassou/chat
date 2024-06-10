@@ -5,20 +5,14 @@ import { useStateContext } from '../context/context';
 import ChatScreen from './components/chatScreen';
 import UsersScreen from './components/usersScreen';
 import getUsers from '../API/users/getUsers';
+import Model from '../components/model';
 
 
 
 function Chat({user}) {
 
-  const {openSearchModel  , setusers , cureentUser , users} = useStateContext()
-  
-   
- useEffect(() => {
-     
-  getUsers(setusers  , cureentUser);
-  // console.log(users);
-
-}, [setusers])
+  const {openSearchModel  , setusers , cureentUser , activeModel} = useStateContext()
+ 
  
   return (
     <section className='block md:flex h-[100vh] text-white'>
@@ -28,7 +22,13 @@ function Chat({user}) {
         : 
          <UsersScreen/>
 
+       
       }
+      {
+        activeModel&&
+        <Model/>
+      }
+
       <ChatScreen user = {user}/>
           
      

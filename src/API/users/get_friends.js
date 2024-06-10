@@ -6,7 +6,9 @@ import { db } from "../firebase";
 const messageRef = collection(db, "users");
 
 const getFriends = async (setusers , amisIds) => {
- const uids = Array.from(amisIds);
+
+
+ const uids = Array.from(amisIds ?? []);
   
  console.log("amis : ")
  console.log(uids);

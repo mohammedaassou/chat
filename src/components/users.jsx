@@ -4,12 +4,12 @@ import React, { useEffect, useState} from 'react'
 
 import { AiFillPlusCircle } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
-import { useStateContext } from '../../context/context';
+import { useStateContext } from '../context/context';
 
-import getFriends from '../../API/users/get_friends';
-import getUsers from '../../API/users/getUsers';
-import Loading from '../../components/loading';
-
+import getFriends from '../API/users/get_friends';
+import getUsers from '../API/users/get_users';
+import Loading from './loading';
+import imageProfile from "../assets/images/image.png"
 
 let navheight = 14;
 
@@ -17,19 +17,14 @@ export default function UsersScreen(){
 
  const {setopenSearchModel , setactiveModel, setusers, cureentUser, setselectedUserChat , isChatScreen, setisChatScreen , friends , setfriends} = useStateContext();
 
-  console.log(cureentUser);
   
   const [isLoading, setisLoading] = useState(false)
    
   useEffect(() => {
       
    const subscribe = async()=>{
-     setisLoading(p=>!p);
      await getUsers(setusers  , cureentUser);
  
-     setTimeout(() => {
-      setisLoading(p=>!p);
-     }, 1000);
    } 
    subscribe();
  
@@ -37,9 +32,14 @@ export default function UsersScreen(){
 
 
   useEffect(() => {
+    setisLoading(true);
      
+    const getfriends = async ()=> await getFriends(setfriends , cureentUser.amis);
+    
+    getfriends();
 
-    getFriends(setfriends , cureentUser.amis);
+    setisLoading(false); 
+
 
    
   }, [cureentUser , setfriends])
@@ -71,8 +71,10 @@ export default function UsersScreen(){
    
     {
       isLoading ? <Loading/> :
-      friends.map((e)=> <div key={e.id} className=' flex bg-white px-2 py-2 border-b-[1px] border-main cursor-pointer' onClick={()=> _onSelectUser(e) }>
-      <div className='rounded-full h-10 w-10 bg-black'></div>
+      friends.map((e)=> <div key={e.id} className=' flex bg-white px-2 py-2 border-b-[0.1px] border-gray-500 cursor-pointer' onClick={()=> _onSelectUser(e) }>
+      <div className='rounded-full h-10 w-10 bg-black'>
+        <img src= {e.imageUrl ?? imageProfile }alt="profile img" className = "rounded-full w-full h-full" />
+      </div>
       <h1 className='text-black ml-2 text-sm'>{e.name}</h1>
       </div>
     

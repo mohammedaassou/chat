@@ -3,6 +3,10 @@
     display: none
 }
 
+*{
+    scroll-behavior: smooth;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

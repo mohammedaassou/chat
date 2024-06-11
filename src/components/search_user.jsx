@@ -1,13 +1,13 @@
 
 
 
-import React , {useEffect, useState} from 'react'
+import React , {useState} from 'react'
 import { useStateContext } from '../context/context';
 import { IoMdPersonAdd , IoMdArrowBack} from "react-icons/io";
 import { MdOutlineClear } from "react-icons/md";
-import getUsers from '../API/users/getUsers';
-import { wait } from '@testing-library/user-event/dist/utils';
-import updateUser from '../API/users/updateUser';
+import updateUser from '../API/users/update_user';
+import imageProfile from "../assets/images/image.png"
+
 
 function SearchUser({user}) {
   
@@ -114,11 +114,17 @@ function SearchUser({user}) {
      
      <div>
         {
-            serchedliste.map((e)=> <div key={e.uid} className=' flex justify-between items-center bg-black w-full p-4 py-2'>
-               <h1>
-               {e.name}
-               </h1>
-               <IoMdPersonAdd onClick={()=> {
+            serchedliste.map((e)=> <div key={e.uid} className=' flex justify-between items-center bg-gray-100 w-full p-4 py-2'>
+
+               <div className='flex items-center'>
+                <img src={imageProfile ?? e.imageUrl} alt="img" className='h-10 w-10 rounded-full inline-block' />
+               <div className='inline-block'>
+                <p  className='ml-2 first-letter:capitalize  text-black text-[12px] font-bold '>{e.username}</p>
+                <p  className='ml-2 first-letter:capitalize  text-black text-[15px] font-semibold '>{e.name}</p>
+                </div>
+
+               </div>
+               <IoMdPersonAdd color='black' onClick={()=> {
                 _onAddUser(e)
                }}/>
 

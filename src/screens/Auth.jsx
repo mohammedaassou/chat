@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { signInWithEmailPassword } from '../API/users/sign';
 import { Navigate } from 'react-router-dom';
 import onLogin from '../API/users/login';
-import CreateUser from '../API/users/createUser';
+import CreateUser from '../API/users/create_user';
 import { useStateContext } from '../context/context';
-import getUser from '../API/users/getUser';
+import getUser from '../API/users/get_user';
 
 
 function Login({handleClick}){

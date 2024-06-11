@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
 
-import SearchUser from '../components/searchUser';
 import { useStateContext } from '../context/context';
-import ChatScreen from './components/chatScreen';
-import UsersScreen from './components/usersScreen';
-import getUsers from '../API/users/getUsers';
+import ChatScreen from '../components/chat_screen';
+import UsersScreen from '../components/users';
 import Model from '../components/model';
+import SearchUser from '../components/search_user';
 
 
 

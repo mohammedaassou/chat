@@ -6,24 +6,28 @@ import { useStateContext } from '../context/context';
 import { MdModeEditOutline } from "react-icons/md";
 import { IoMdSave } from "react-icons/io";
 import { useState  , useRef} from 'react';
-import updateUser from '../API/users/updateUser';
+import updateUser from '../API/users/update_user';
 import Loading from './loading';
+import handleUpload from '../API/doc/upload';
+import imageProfile from "../assets/images/image.png"
 
 
-function Profile( ) {
+
+function Profile() {
  
     const {cureentUser , setactiveProfile , setcureentUser} = useStateContext();
     const [activeEdit, setactiveEdit] = useState(true)
     const [name, setname] = useState(cureentUser.name);
     const [email, setemail] = useState(cureentUser.email);
-
-    const [isLoading, setisLoading] = useState(false)
+    const [File, setFile] = useState(null);
+    const [isLoading, setisLoading] = useState(false);
+    const [ImageSrc, setImageSrc] = useState(cureentUser.imageUrl);
 
     const refName = useRef();
     const refEmail = useRef();
 
     
-
+  
   
     const onEdit = ()=>{
       setactiveEdit(p=>!p);
@@ -38,8 +42,6 @@ function Profile( ) {
 
     }
    
-   
-
     const onSave = async ()=>{
       setisLoading(true);
 
@@ -55,40 +57,64 @@ function Profile( ) {
         name : name,
         email : email
       } );
-    
-      // console.log(res);
-    console.log(name)
-    console.log(email)
+
+      if(File){
+        handleUpload(File , null , cureentUser.id).then((url)=> setcureentUser(p=>({...p , imageUrl : url})));
+        await updateUser(cureentUser.id , {imageUrl : cureentUser.imageUrl})
+      }
+         
+      
+
 
      setTimeout(() => {
       setisLoading(false);
      }, 500);
-
+   
       setcureentUser(prev => ({
         ...prev,
         name: name,
-        email: email
+        email: email,
     }));
+     
     
 
       // return null;
     }
 
+    const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if(file)
+    setFile(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImageSrc(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
 
  
    <div className='bg-gray-300 text-black  top-[50%] left-[50%] p-10 rounded-lg absolute translate-x-[-50%] translate-y-[-50%] h-screen w-full sm:w-fit sm:h-fit' style={{zIndex : 11}}>
-     { isLoading ? <div className=' h-screen w-full flex justify-center items-center'><Loading/></div>
+     { isLoading ? <div className=' h-screen sm:h-fit w-full flex justify-center items-center'><Loading/></div>
     :
     <>
     <div className=' flex justify-end'>  <IoBackspaceOutline  className='cursor-pointer ' onClick={()=>setactiveProfile(false) }/></div>
      <div className=' flex justify-center items-center flex-col'>
-         <div className='h-20 w-20 bg-black rounded-full'></div>
+         <div className='h-20 w-20 bg-black rounded-full text-white relative' >
+          <img src={ImageSrc ?? imageProfile} alt="image profile" className = "rounded-full w-full h-full" />
+          <input type="file" onChange={handleFileChange}  id='image_profile' className='hidden'  accept="image/*"/>
+         {!activeEdit &&
+         <label htmlFor="image_profile" className='absolute bottom-[0%] right-[2%] rounded-full bg-gray-300 p-1'><MdModeEditOutline color='black' className = "cursor-pointer"/></label> }  
+         </div>
 
             <div className=' mt-5 text-sm'>
             <div className='mb-2 flex justify-between'><label className='font-semibold'>Username :</label> 
-            <input type='text' value={cureentUser.username} name='username' activeEdit readOnly disabled className='outline-none p-1 text-xs' />
- </div>
+            <input type='text' value={cureentUser.username} name='username'  readOnly disabled className='outline-none p-1 text-xs' />
+        </div>
 
 
             <div className='mb-2 flex justify-between'><label className='font-semibold'>Name :</label> 

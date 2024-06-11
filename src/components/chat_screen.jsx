@@ -3,11 +3,13 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { IoMdArrowBack } from "react-icons/io";
 import { IoSend } from "react-icons/io5";
-import getUsers from './../../API/users/getUsers';
-import sendMessage from './../../API/message/send';
-import messages from './../../API/message/massages';
+import getUsers from '../API/users/get_users';
+import sendMessage from '../API/message/send';
+import messages from '../API/message/massages';
 import Message from './message';
-import { useStateContext } from '../../context/context';
+import { useStateContext } from '../context/context';
+import imageProfile from "../assets/images/image.png"
+
 
 
 
@@ -25,7 +27,9 @@ export default function ChatScreen(){
      const send = async() => {
    
        console.log(message.text);
-   
+      if(message.text.trim().length <= 0){
+        return;
+      }
       await sendMessage(message)
    
         setmessage(p=>({  ...p , text : ""}) )
@@ -33,6 +37,8 @@ export default function ChatScreen(){
        console.log(message)
    
      };
+
+     
    
      const _onBack = ()=>{
         setisChatScreen(false)
@@ -41,11 +47,14 @@ export default function ChatScreen(){
      const divRef = useRef(null);
    
      useEffect(() => {
+      
        if (divRef.current) {
-         divRef.current.scrollTop = divRef.current.scrollHeight;
+         divRef.current.scrollTop = divRef.current.scrollHeight ;
    
        }
-     }, []); 
+
+      //  console.log("divRef.current.scrollHeight  "  + divRef.current.scrollHeight)
+     }, [CurrentMessages]); 
    
    
    
@@ -63,10 +72,9 @@ export default function ChatScreen(){
       }  , [selectedUserChat ])
       
      
-     // isChatScreen ? "hidden" : "block " +
        const style  = isChatScreen ? "block " : "hidden";
      return(
-       !selectedUserChat ?  <div className={  isChatScreen ? " bg-gray-400 h-full flex-1 block md:block" : "hidden "  }>test
+       !selectedUserChat ?  <div className={  !isChatScreen ? " bg-main h-full flex-1 md:flex items-center justify-center  text-white font-bold text-4xl hidden " : "hidden "  }><h1>Your Chat</h1>
         
        </div> :
    
@@ -75,7 +83,9 @@ export default function ChatScreen(){
                   <IoMdArrowBack onClick={()=> _onBack()} className='block md:hidden'/>
                   {/* test back button */}
                  <div className=' flex  px-2 py-1'>
-                 <div className='rounded-full h-10 w-10 bg-white'></div>
+                 <div className='rounded-full h-10 w-10 bg-white'>
+                  <img src={selectedUserChat.imageUrl ?? imageProfile } alt="profile img chat" className='rounded-full w-full h-full'/>
+                 </div>
                  <h1 className='text-white ml-2 text-sm'>{selectedUserChat.name}</h1>
                  </div>
             </nav>
@@ -84,7 +94,7 @@ export default function ChatScreen(){
             */}
             {
              CurrentMessages.length > 0 &&
-            <div className={`mt-${navheight} overflow-scroll  h-[100%] p-14`} ref={divRef}   >
+            <div className={`mt-${navheight} overflow-scroll  h-[100%] p-14 px-4`} ref={divRef}   >
               
              {CurrentMessages.map((msg , index)=> <Message key={index} text={msg.text} userSentID = {msg.userSentID}/> )}
             </div>

@@ -16,7 +16,7 @@ const onLogin = (email, password) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorCode, errorMessage);
-            throw error; // Rethrow the error to be handled by the caller
+           
         });
 };
 

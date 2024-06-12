@@ -5,11 +5,12 @@ import onLogin from '../API/users/login';
 import CreateUser from '../API/users/create_user';
 import { useStateContext } from '../context/context';
 import getUser from '../API/users/get_user';
+import InvalideUserModel from '../components/invalide_user_model';
 
 
 function Login({handleClick}){
 
-  const {setcureentUser , cureentUser} = useStateContext()
+  const {setcureentUser , isInvalideUser , setisInvalideUser} = useStateContext();
 
   const clssInput = ' md:w-72 text-white outline-none  text-sm p-1 px-3 placeholder:text-xs bg-transparent border-b-2 border-b-white';
   const [inputs, setinputs] = useState({
@@ -22,8 +23,12 @@ function Login({handleClick}){
     const {email , password} = inputs;
     
     const user = await onLogin(email , password);
-    
-
+       
+    if(!user){
+      console.log(user);
+      setisInvalideUser(p=>!p);
+      return;
+    }
       const userdata =  getUser(user.uid);
      
       if(userdata)
@@ -108,7 +113,7 @@ function SignUp({handleClick}){
            console.log("id ::: " + id);
 
             setcureentUser({
-              email : email , name : name , uid : uid, username : username , id : id , amis : {}
+              email : email , name : name , uid : uid, username : username , id : id , amis : []
             })
               
             console.log(cureentUser)
@@ -173,14 +178,18 @@ function Welcome({handleClick , isLogin}){
 function Auth({user}) {
 
   const [isLogin, setisLogin] = useState(true);
-
+  
+  const {isInvalideUser} = useStateContext();
   if (user) {
     return <Navigate to="/chat"></Navigate>;
   }
 
   return (
     <div className='flex h-[100vh]'>
-
+      { 
+       isInvalideUser &&
+        <InvalideUserModel />
+      }
       <div className='flex-1 bg-main'>
         {
           isLogin ? 

@@ -19,7 +19,8 @@ export const ContextProvider = ({ children }) => {
     const [selectedUserChat, setselectedUserChat] = useState(false)
     const [CurrentMessages, setCurrentMessages] = useState([]);
     const [friends, setfriends] = useState([])
-
+  const [isInvalideUser, setisInvalideUser] = useState(false)
+    
     const [isChatScreen, setisChatScreen] = useState(false);
 
     const [activeModel, setactiveModel] = useState(false);
@@ -56,7 +57,9 @@ export const ContextProvider = ({ children }) => {
             activeModel : activeModel,
             setactiveModel : setactiveModel,
             activeProfile : activeProfile ,
-            setactiveProfile : setactiveProfile
+            setactiveProfile : setactiveProfile,
+            isInvalideUser : isInvalideUser,
+            setisInvalideUser : setisInvalideUser
         }}>
             {children}
         </StateContext.Provider>

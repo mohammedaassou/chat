@@ -22,7 +22,7 @@ const notesCollectionRef = collection(db, "users");
         username: inputValue.username,
         name: inputValue.name,
         timestamp: serverTimestamp(),
-        amis : {},
+        amis : [],
       });
    
       

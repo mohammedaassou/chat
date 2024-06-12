@@ -28,11 +28,13 @@ function SearchUser({user}) {
       return ;
     }
     
-    const amis = Array.from(cureentUser.amis);
+    const amis = Array.from(cureentUser.amis?? []);
 
     console.log(amis);
 
-    const liste = users.filter((e)=>  e.name!= null && e.name.toLowerCase().startsWith(searchName.toLowerCase()) && !amis.includes(e.uid) )
+
+
+    const liste = users.filter((e)=>   e.name.toLowerCase().startsWith(searchName.toLowerCase()) && !amis.includes(e.uid) )
      
     setserchedliste(liste);
      
@@ -124,7 +126,7 @@ function SearchUser({user}) {
                 </div>
 
                </div>
-               <IoMdPersonAdd color='black' onClick={()=> {
+               <IoMdPersonAdd color='black' className='cursor-pointer' onClick={()=> {
                 _onAddUser(e)
                }}/>
 

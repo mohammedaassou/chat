@@ -76,9 +76,7 @@ function Profile() {
         email: email,
     }));
      
-    
 
-      // return null;
     }
 
     const handleFileChange = (event) => {
@@ -127,7 +125,7 @@ function Profile() {
             </div>
             
             <div className='mb-2 flex justify-between'><label className='font-semibold'>Email :</label> 
-            <input type='email' value={email} name='email' activeEdit readOnly disabled className='outline-none p-1 text-xs' ref={ refEmail} autoComplete='off' autoCorrect='off' onChange={(e)=> setemail(e.target.value)}/>
+            <input type='email' value={email} name='email'  readOnly disabled className='outline-none p-1 text-xs' ref={ refEmail} autoComplete='off' autoCorrect='off' onChange={(e)=> setemail(e.target.value)}/>
 
             </div>
 

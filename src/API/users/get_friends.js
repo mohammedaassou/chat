@@ -12,7 +12,8 @@ const getFriends = async (setusers , amisIds) => {
   
  console.log("amis : ")
  console.log(uids);
-
+ 
+ if(uids.length > 0)
   try {
     const q = query(
       messageRef,
@@ -39,6 +40,7 @@ const getFriends = async (setusers , amisIds) => {
   } catch (error) {
     console.error("Error fetching notes: ", error);
   }
+  else console.log("empty array")
 };
 
 export default getFriends;

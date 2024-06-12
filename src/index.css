@@ -7,6 +7,10 @@
     scroll-behavior: smooth;
 }
 
+input{
+    font-size: 16px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

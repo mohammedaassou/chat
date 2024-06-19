@@ -43,6 +43,7 @@ function Profile() {
     }
    
     const onSave = async ()=>{
+
       setisLoading(true);
 
       setactiveEdit(p=>!p);
@@ -53,28 +54,34 @@ function Profile() {
       refEmail.current.setAttribute("readOnly" , "readOnly");
       refEmail.current.setAttribute("disabled" , "disabled")
      
-      await updateUser( cureentUser.id , {
-        name : name,
-        email : email
-      } );
-
-      if(File){
-        handleUpload(File , null , cureentUser.id).then((url)=> setcureentUser(p=>({...p , imageUrl : url})));
-        await updateUser(cureentUser.id , {imageUrl : cureentUser.imageUrl})
-      }
-         
       
-
-
-     setTimeout(() => {
-      setisLoading(false);
-     }, 500);
-   
-      setcureentUser(prev => ({
-        ...prev,
-        name: name,
-        email: email,
-    }));
+     
+      try {
+         
+      if(File)
+        await handleUpload(File , cureentUser.id).then((url)=> setcureentUser(p=>({...p , imageUrl : url})));
+    
+ 
+          console.log("cureentUser" ,  cureentUser);
+          
+         await updateUser(cureentUser.id , {imageUrl : cureentUser.imageUrl ,  name : name,
+           email : email})
+ 
+ 
+       setisLoading(false);
+    
+       setcureentUser(prev => ({
+         ...prev,
+         name: name,
+         email: email,
+     }));
+      
+      } catch (error) {
+       setisLoading(false);
+        console.log(error)
+      }finally {
+        setisLoading(false)
+      }
      
 
     }
@@ -96,8 +103,8 @@ function Profile() {
   return (
 
  
-   <div className='bg-gray-300 text-black  top-[50%] left-[50%] p-10 rounded-lg absolute translate-x-[-50%] translate-y-[-50%] h-screen w-full sm:w-fit sm:h-fit' style={{zIndex : 11}}>
-     { isLoading ? <div className=' h-screen sm:h-fit w-full flex justify-center items-center'><Loading/></div>
+   <div className='bg-gray-300 text-black  top-[50%] left-[50%] p-10 rounded-lg absolute translate-x-[-50%] translate-y-[-50%] h-full w-full sm:w-fit sm:h-fit' style={{zIndex : 11}}>
+     { isLoading ? <div className=' h-full sm:h-fit w-full flex justify-center items-center'><Loading/></div>
     :
     <>
     <div className=' flex justify-end'>  <IoBackspaceOutline  className='cursor-pointer ' onClick={()=>setactiveProfile(false) }/></div>
@@ -117,7 +124,7 @@ function Profile() {
 
             <div className='mb-2 flex justify-between'><label className='font-semibold'>Name :</label> 
             <input type='text'
-             value={name} name='name' activeEdit readOnly disabled className='outline-none p-1 text-xs' ref={ refName} 
+             value={name} name='name'  readOnly disabled className='outline-none p-1 text-xs' ref={ refName} 
             autoComplete='off'
              autoCorrect='off' 
              onChange={(e)=> setname(e.target.value)}/>

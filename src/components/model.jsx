@@ -11,6 +11,7 @@ function Model( ) {
   const _onSignOut = async()=> {
 
     try {
+
       await signOut(auth);
 
       setfriends([]);
@@ -19,7 +20,8 @@ function Model( ) {
   
       setCurrentMessages([]);
   
-      setactiveModel(false)
+      setactiveModel(false);
+
   
       localStorage.clear();
       

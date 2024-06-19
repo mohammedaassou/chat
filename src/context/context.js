@@ -19,15 +19,11 @@ export const ContextProvider = ({ children }) => {
     const [selectedUserChat, setselectedUserChat] = useState(false)
     const [CurrentMessages, setCurrentMessages] = useState([]);
     const [friends, setfriends] = useState([])
-  const [isInvalideUser, setisInvalideUser] = useState(false)
-    
+    const [isInvalideUser, setisInvalideUser] = useState(false)
     const [isChatScreen, setisChatScreen] = useState(false);
-
     const [activeModel, setactiveModel] = useState(false);
     const [activeProfile, setactiveProfile] = useState(false);
 
-
-    
   
     useEffect(() => {
         setToLocalStorage("users", users);

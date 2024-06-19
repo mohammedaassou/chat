@@ -7,10 +7,11 @@ import { useStateContext } from '../context/context';
 import getUser from '../API/users/get_user';
 import InvalideUserModel from '../components/invalide_user_model';
 
+// localStorage.clear();
 
 function Login({handleClick}){
 
-  const {setcureentUser , isInvalideUser , setisInvalideUser} = useStateContext();
+  const {setcureentUser ,  setisInvalideUser} = useStateContext();
 
   const clssInput = ' md:w-72 text-white outline-none  text-sm p-1 px-3 placeholder:text-xs bg-transparent border-b-2 border-b-white';
   const [inputs, setinputs] = useState({
@@ -18,30 +19,23 @@ function Login({handleClick}){
     password : null
   });
 
-  const _onlogin= async ()=>{
+  const _onlogin = async ()=>{
     
     const {email , password} = inputs;
     
     const user = await onLogin(email , password);
-       
+      
+    // if the data entreed is invalid, display model 
     if(!user){
-      console.log(user);
       setisInvalideUser(p=>!p);
       return;
     }
-      const userdata =  getUser(user.uid);
-     
-      if(userdata)
-      userdata.then((value)=>{
-          setcureentUser({
-             ...value.data() , id : value.id
-          })
-      }
-    
-    ).catch((e)=> console.log("eror getting data user " + e));
-      
+
+    setcureentUser({uid : user.uid, email : user.email});
+
     
   }
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -73,7 +67,7 @@ function Login({handleClick}){
 
 function SignUp({handleClick}){
   
-   const {setcureentUser , cureentUser} =  useStateContext();
+   const {setcureentUser , setselectedUserChat} =  useStateContext();
 
   const [inputs, setinputs] = useState({
     name : null,
@@ -82,41 +76,30 @@ function SignUp({handleClick}){
     password : null
   });
    
-    // Function to handle input changes
     const handleInputChange = (event) => {
-      // Destructure event target for easier access
       const { name, value } = event.target;
-      // Update state using spread operator to keep existing state unchanged
       setinputs({ ...inputs, [name]: value });
     };
-    
-   
 
     const _onsubmit = async()=>{
 
     const {email , password , name , username } = inputs;
-
+          // create new user in firebase auth
             signInWithEmailPassword(email , password)
             .then((userCredential) => {
-            // Signed in successfully
              const user = userCredential.user;
-
-            console.log("User signed in:", user);
-            
+          // get uid for add it in database
             const {uid} = user
-            
            
-
-          CreateUser({uid , email , name , username}).then((value)=> {
+          // add all data to databases
+            CreateUser({uid , email , name , username}).then((value)=> {
            const {id} = value;
-
-           console.log("id ::: " + id);
-
+          
+           // ensure that engistred also on local 
             setcureentUser({
               email : email , name : name , uid : uid, username : username , id : id , amis : []
             })
               
-            console.log(cureentUser)
           });
 
          })
@@ -166,9 +149,7 @@ function Welcome({handleClick , isLogin}){
     text-main font-bold py-2 px-4 border mt-4 
     border-main rounded-2xl" 
     onClick={handleClick}>
-      {
-      isLogin ? "Login": "Sign up"
-      }
+      { isLogin ? "Login": "Sign up"}
     </button>
 
   </div>
@@ -180,6 +161,7 @@ function Auth({user}) {
   const [isLogin, setisLogin] = useState(true);
   
   const {isInvalideUser} = useStateContext();
+  
   if (user) {
     return <Navigate to="/chat"></Navigate>;
   }

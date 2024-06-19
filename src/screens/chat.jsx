@@ -10,7 +10,7 @@ import SearchUser from '../components/search_user';
 
 function Chat({user}) {
 
-  const {openSearchModel  , setusers , cureentUser , activeModel} = useStateContext()
+  const {openSearchModel  , activeModel} = useStateContext()
  
  
   return (

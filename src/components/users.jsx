@@ -1,21 +1,21 @@
 
 
 import React, { useEffect, useState} from 'react'
-
 import { AiFillPlusCircle } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
 import { useStateContext } from '../context/context';
-
 import getFriends from '../API/users/get_friends';
 import getUsers from '../API/users/get_users';
 import Loading from './loading';
 import imageProfile from "../assets/images/image.png"
+import { signOut } from 'firebase/auth';
+import { auth } from '../API/firebase';
 
 let navheight = 14;
 
 export default function UsersScreen(){
 
- const {setopenSearchModel , setactiveModel, setusers, cureentUser, setselectedUserChat , isChatScreen, setisChatScreen , friends , setfriends} = useStateContext();
+ const {setopenSearchModel , users , setactiveModel, setusers, cureentUser, setselectedUserChat , isChatScreen, setisChatScreen , friends , setfriends} = useStateContext();
 
   
   const [isLoading, setisLoading] = useState(false)
@@ -27,22 +27,27 @@ export default function UsersScreen(){
  
    } 
    subscribe();
- 
- }, [setusers])
+
+
+ }, [])
 
 
   useEffect(() => {
-    setisLoading(true);
-     
-    const getfriends = async ()=> await getFriends(setfriends , cureentUser.amis);
+
+    // signOut(auth)
+
+
+    let unsubscribe;
+
+    const fetchFriends = async () => {
+      unsubscribe = await getFriends(setfriends, cureentUser.amis);
+      console.log("frinds => " , friends)
+    };
+
+    fetchFriends();
+
     
-    getfriends();
-
-    setisLoading(false); 
-
-
-   
-  }, [cureentUser , setfriends])
+  }, [cureentUser]);
   
    
    const _onSelectUser = async(e)=>{

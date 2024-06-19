@@ -6,6 +6,7 @@ import Chat from './screens/chat'
 import { Route, Routes , BrowserRouter } from 'react-router-dom';
 import { auth } from './API/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import Loading from './components/loading';
 
 
 function App() {
@@ -25,10 +26,9 @@ function App() {
     });
     return () => unsubscribe();
   }, []);
-
-  if (isFetching) {
-    return <h2>Loading...</h2>;
-  }
+    
+    if(isFetching)
+    return <div className='flex justify-center items-center h-screen '><Loading/></div> 
    
 
   return (

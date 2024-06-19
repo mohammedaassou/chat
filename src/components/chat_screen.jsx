@@ -9,6 +9,8 @@ import messages from '../API/message/massages';
 import Message from './message';
 import { useStateContext } from '../context/context';
 import imageProfile from "../assets/images/image.png"
+import getUser from '../API/users/get_user';
+import getFriends from '../API/users/get_friends';
 
 
 
@@ -17,11 +19,11 @@ let navheight = 14;
 
 export default function ChatScreen(){
  
-    const {setusers  , selectedUserChat , cureentUser , setcureentUser, CurrentMessages ,setselectedUserChat, setCurrentMessages , isChatScreen , setisChatScreen} = useStateContext();
+    const {setusers  , selectedUserChat , cureentUser , setcureentUser, CurrentMessages ,setfriends, setCurrentMessages , isChatScreen , setisChatScreen} = useStateContext();
    
     const [message, setmessage] = useState({text : ""}) 
    
-    
+    const divRef = useRef(null);
      
    
      const send = async() => {
@@ -44,37 +46,47 @@ export default function ChatScreen(){
         setisChatScreen(false)
      }
      
-     const divRef = useRef(null);
-   
+     
+
      useEffect(() => {
+      const unsubscribe = getUser(cureentUser.uid, setcureentUser);
+  
+      return () => unsubscribe();
+    }, [cureentUser.uid]);
+
       
+
+
+     useEffect(() => {
        if (divRef.current) {
          divRef.current.scrollTop = divRef.current.scrollHeight ;
-   
        }
 
-      //  console.log("divRef.current.scrollHeight  "  + divRef.current.scrollHeight)
      }, [CurrentMessages]); 
    
    
-   
      useEffect(() => {
-       getUsers(setusers , cureentUser);
        
-      } , [setusers])
+       getUsers(setusers);
+
+      } , [])
     
       useEffect(()=> {
     
          messages(setCurrentMessages , cureentUser.id , selectedUserChat.id);
     
-        setmessage(p=>({...p , userToSentID : selectedUserChat.id , userSentID : cureentUser.id }));
+         setmessage(p=>({...p , userToSentID : selectedUserChat.id , userSentID : cureentUser.id }));
     
       }  , [selectedUserChat ])
       
      
+     
+
+
        const style  = isChatScreen ? "block " : "hidden";
+
      return(
-       !selectedUserChat ?  <div className={  !isChatScreen ? " bg-main h-full flex-1 md:flex items-center justify-center  text-white font-bold text-4xl hidden " : "hidden "  }><h1>Your Chat</h1>
+       !selectedUserChat ?  <div className={  !isChatScreen ? " bg-main  md:min-[50%] md:max-[50%] h-full flex-1 md:flex items-center justify-center  text-white font-bold text-4xl hidden " : "hidden "  }><h1>Your Chat</h1>
         
        </div> :
    
@@ -94,7 +106,7 @@ export default function ChatScreen(){
             */}
             {
              CurrentMessages.length > 0 &&
-            <div className={`mt-${navheight} overflow-scroll  h-[100%] p-14 px-4`} ref={divRef}   >
+            <div className={`mt-${navheight} overflow-scroll  h-[100%] p-14 px-4`} ref={divRef}>
               
              {CurrentMessages.map((msg , index)=> <Message key={index} text={msg.text} userSentID = {msg.userSentID}/> )}
             </div>

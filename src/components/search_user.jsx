@@ -9,9 +9,9 @@ import updateUser from '../API/users/update_user';
 import imageProfile from "../assets/images/image.png"
 
 
-function SearchUser({user}) {
+function SearchUser() {
   
-   const {users , cureentUser , setcureentUser , friends , setfriends, setusers} = useStateContext();
+   const {users , cureentUser , setcureentUser , friends , setfriends} = useStateContext();
 
    const [serchedliste, setserchedliste] = useState([])
 
@@ -30,11 +30,9 @@ function SearchUser({user}) {
     
     const amis = Array.from(cureentUser.amis?? []);
 
-    console.log(amis);
+    console.log("amis :  " , amis);
 
-
-
-    const liste = users.filter((e)=>   e.name.toLowerCase().startsWith(searchName.toLowerCase()) && !amis.includes(e.uid) )
+    const liste = users.filter((e)=> e.name.toLowerCase().startsWith(searchName.toLowerCase()) && !amis.includes(e.uid) )
      
     setserchedliste(liste);
      
@@ -42,9 +40,10 @@ function SearchUser({user}) {
   }
   
  const _onAddUser = (e)=>{
-
-  const amis = Array.from(cureentUser.amis ?? []);
   
+  // uids of friends is in array amis
+  const amis = Array.from(cureentUser.amis ?? []);
+   
   if(!amis) return;
 
   if(cureentUser.id && e.uid && !amis.includes(e.uid)){
@@ -53,7 +52,7 @@ function SearchUser({user}) {
     });
   
     updateUser(e.id , {
-      amis : [...e.amis , cureentUser.uid]
+      amis : [...e.amis ?? [] , cureentUser.uid]
     });
 
     setcureentUser(prev=> ({ ...prev , amis : [...amis , e.uid]}));
@@ -74,17 +73,20 @@ function SearchUser({user}) {
 
  }
 
+
+
+
   
  const {setopenSearchModel} = useStateContext()
 
   
   return (
-    <div className='flex-1' 
+    <div className='flex-1 h-screen overflow-scroll' 
     style={{boxShadow : "0px 0px 5px 1px gray"}}>
 
 
 
-<form className="flex items-center p-4 mx-auto">   
+<form className="flex items-center p-4 mx-auto fixed top-0 right-0 left-0 bg-white md:right-1/2">   
     <label htmlFor="simple-search" className="sr-only">Search</label>
     <button  type='button' className="text-xl text-black mr-2" 
     onClick={()=> setopenSearchModel(prev=>!prev)}
@@ -114,12 +116,12 @@ function SearchUser({user}) {
     </button>
 </form>
      
-     <div>
+     <div className='pt-16'>
         {
-            serchedliste.map((e)=> <div key={e.uid} className=' flex justify-between items-center bg-gray-100 w-full p-4 py-2'>
+            serchedliste.map((e)=> <div key={e.uid} className=' flex justify-between items-center bg-gray-100 w-full p-4 py-2 ' >
 
                <div className='flex items-center'>
-                <img src={imageProfile ?? e.imageUrl} alt="img" className='h-10 w-10 rounded-full inline-block' />
+                <img src={e.imageUrl ?? imageProfile} alt="img" className='h-10 w-10 rounded-full inline-block' />
                <div className='inline-block'>
                 <p  className='ml-2 first-letter:capitalize  text-black text-[12px] font-bold '>{e.username}</p>
                 <p  className='ml-2 first-letter:capitalize  text-black text-[15px] font-semibold '>{e.name}</p>

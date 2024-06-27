@@ -1,7 +1,5 @@
 import React from 'react'
 import { useStateContext } from '../context/context';
-import { auth } from '../API/firebase';
-import { signOut } from 'firebase/auth';
 import Profile from './profile';
 
 function Model( ) {
@@ -12,7 +10,6 @@ function Model( ) {
 
     try {
 
-      await signOut(auth);
 
       setfriends([]);
 

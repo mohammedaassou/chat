@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from 'react'
-// import { signInWithEmailPassword } from '../API/users/sign';
-import { Navigate } from 'react-router-dom';
-// import onLogin from '../API/users/login';
-// import CreateUser from '../API/users/create_user';
+import CreateUser from '../API/users/create_user';
 import { useStateContext } from '../context/context';
-import { signOut } from 'firebase/auth';
-import { auth } from '../API/firebase';
-// import getUser from '../API/users/get_user';
-// import InvalideUserModel from '../components/invalide_user_model';
+import getUser from '../API/users/get_user';
+import InvalideUserModel from '../components/invalide_user_model';
+
 
 // localStorage.clear();
 
-
 function Login({handleClick}){
 
-  // const {setcureentUser ,  setisInvalideUser} = useStateContext();
+  const {setcureentUser ,  setisInvalideUser} = useStateContext();
 
   const clssInput = ' md:w-72 text-white outline-none  text-sm p-1 px-3 placeholder:text-xs bg-transparent border-b-2 border-b-white';
   const [inputs, setinputs] = useState({
@@ -24,17 +19,17 @@ function Login({handleClick}){
 
   const _onlogin = async ()=>{
     
-  //   const {email , password} = inputs;
+    // const {email , password} = inputs;
     
-  //   const user = await onLogin(email , password);
+    // const user = await onLogin(email , password);
       
-  //   // if the data entreed is invalid, display model 
-  //   if(!user){
-  //     setisInvalideUser(p=>!p);
-  //     return;
-  //   }
+    // // if the data entreed is invalid, display model 
+    // if(!user){
+    //   setisInvalideUser(p=>!p);
+    //   return;
+    // }
 
-  //   setcureentUser({uid : user.uid, email : user.email});
+    // setcureentUser({uid : user.uid, email : user.email});
 
     
   }
@@ -85,30 +80,7 @@ function SignUp({handleClick}){
     };
 
     const _onsubmit = async()=>{
-    
-    // const {email , password , name , username } = inputs;
-    //       // create new user in firebase auth
-    //         signInWithEmailPassword(email , password)
-    //         .then((userCredential) => {
-    //          const user = userCredential.user;
-    //       // get uid for add it in database
-    //         const {uid} = user
-           
-    //       // add all data to databases
-    //         CreateUser({uid , email , name , username}).then((value)=> {
-    //        const {id} = value;
-          
-    //        // ensure that engistred also on local 
-    //         setcureentUser({
-    //           email : email , name : name , uid : uid, username : username , id : id , amis : []
-    //         })
-              
-    //       });
 
-    //      })
-    //         .catch((error) => {
-    //         console.error("Sign in error:", error.message);
-    //         });
     }
 
    
@@ -168,13 +140,14 @@ function Auth({user}) {
   // if (user) {
   //   return <Navigate to="/chat"></Navigate>;
   // }
+ 
 
   return (
     <div className='flex h-[100vh]'>
-      {/* { 
+      { 
        isInvalideUser &&
         <InvalideUserModel />
-      } */}
+      }
       <div className='flex-1 bg-main'>
         {
           isLogin ? 

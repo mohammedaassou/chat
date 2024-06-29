@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import CreateUser from '../API/users/create_user';
 import { useStateContext } from '../context/context';
-import getUser from '../API/users/get_user';
 import InvalideUserModel from '../components/invalide_user_model';
+import login from '../API/auth/login';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { Navigate } from 'react-router-dom';
 
 
-// localStorage.clear();
+
+
 
 function Login({handleClick}){
 
@@ -19,26 +22,29 @@ function Login({handleClick}){
 
   const _onlogin = async ()=>{
     
-    // const {email , password} = inputs;
-    
-    // const user = await onLogin(email , password);
-      
-    // // if the data entreed is invalid, display model 
-    // if(!user){
-    //   setisInvalideUser(p=>!p);
-    //   return;
-    // }
+    const {email , password} = inputs;
 
-    // setcureentUser({uid : user.uid, email : user.email});
+    
+    const user = await login(email , password);
+      
+    // if the data entreed is invalid, display model 
+    if(!user){
+      setisInvalideUser(p=>!p);
+      return;
+    }
+
+    setcureentUser({uid : user.uid, email : user.email});
+
+    console.log(user);
 
     
   }
-
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setinputs({ ...inputs, [name]: value });
   };
+
 
  return <div className='flex flex-col items-center justify-center h-[100%]'>
        <h1 className='font-bold text-2xl sm:text-3xl text-white text-center'>Login to chat</h1>
@@ -63,6 +69,8 @@ function Login({handleClick}){
  </div>
 }
 
+
+
 function SignUp({handleClick}){
   
    const {setcureentUser , setselectedUserChat} =  useStateContext();
@@ -80,8 +88,44 @@ function SignUp({handleClick}){
     };
 
     const _onsubmit = async()=>{
+      
+   
+     
+     const isValid = (inputs.name!= null || inputs.username!=null) &&  Array.from(inputs.name).join("").trim().length > 4 && Array.from(inputs.username).join("").trim().length > 4
+      
+      if(!isValid)
+        return;
 
-    }
+
+     
+     const {email , password , name , username } = inputs;
+
+             signInWithEmailAndPassword(email , password) 
+             .then((userCredential) => {
+              const user = userCredential.user;
+           // get uid for add it in database
+         
+             const {uid} = user
+            
+             
+           // add all data to databases
+              CreateUser({email : email ,
+                name : name ,
+                uid : uid, 
+                username : username ,
+                friendsUid : [] ,
+                about : "about me",
+                newMessages : [],
+                isOnline : true ,
+                time : new Date().toLocaleString()
+              })
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+    });
+  }
 
    
 
@@ -115,6 +159,8 @@ function SignUp({handleClick}){
   </div>
 }
 
+
+
 function Welcome({handleClick , isLogin}){
   return <div className='flex  flex-col w-full justify-center items-center '>
     <h1 className='text-main font-bold text-4xl'>Welcome</h1>
@@ -137,9 +183,9 @@ function Auth({user}) {
   
   const {isInvalideUser} = useStateContext();
   
-  // if (user) {
-  //   return <Navigate to="/chat"></Navigate>;
-  // }
+  if (user) {
+    return <Navigate to="/chat"></Navigate>;
+  }
  
 
   return (
